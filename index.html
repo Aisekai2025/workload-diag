@@ -79,7 +79,7 @@ const i18n = {
         types: ["🌿 昭和のマラソン型（低負荷）", "🏃 標準的ランナー（中負荷）", "🔥 令和のインターバル走（高負荷）"],
         rxs: ["あなたの脳には、心地よい「余白」が保たれています。今の健やかなリズムを大切にしてください。", "少しばかり過密なようです。1日15分だけ、全ての画面を閉じる「静寂」を予約しませんか？", "脳が悲鳴を上げています。それはあなたの根性のせいではありません。今すぐ深呼吸をして、自分を労わってください。"],
         disclaimerTitle: "免責事項",
-        disclaimerBody: "本診断は医学的診断ではありません。結果の利用は自己責任でお願いいたします。"
+        disclaimerBody: "本診断は一般的な傾向を分析するものであり、医学的診断に代わるものではありません。結果の利用は自己責任でお願いいたします。心身に不調を感じる場合は、速やかに専門医や医療機関を受診してください。"
     },
     en: {
         title: "Brain Workload Check",
@@ -113,16 +113,27 @@ function show() {
     document.getElementById('quiz').style.display = 'none';
     const res = document.getElementById('result');
     res.style.display = 'block';
+    
     const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
     document.getElementById('res-type').innerText = i18n[lang].types[idx];
     document.getElementById('res-score').innerText = `Fatigue Score: ${score} / 15`;
     document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
+    
     setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
-    const message = encodeURIComponent(`【脳の労働密度診断】\n私の結果は「${i18n[lang].types[idx]}」でした！\n(Fatigue Score: ${score}/15)\n\n診断はこちら：\n${window.location.href}\n#労働密度診断 #脳のインターバル走`);
-    document.getElementById('tweet').href = "https://twitter.com" + message;
+
+    // メッセージの組み立て（ここでエンコードを1回に集約）
+    const shareUrl = window.location.href;
+    const resultType = i18n[lang].types[idx];
+    const message = `【脳の労働密度診断】\n結果は「${resultType}」でした！\n(Score: ${score}/15)\n\n診断はこちら：\n${shareUrl}\n#労働密度診断 #脳のインターバル走`;
+
+    // 𝕏 (Twitter) 投稿用URL
+    document.getElementById('tweet').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
 }
+
 function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
 updateUI();
 </script>
 </body>
 </html>
+
+
