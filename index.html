@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Workload Diagnostics | 労働密度診断</title>
+    <style>
+        :root { --retro: #f4ecd8; --modern: #e0f2f1; --accent: #26a69a; --text: #2c3e50; }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BrainWorkloadCheck.png') center/cover no-repeat fixed;
+            background-color: #333; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+        }
+        .container { 
+            background: rgba(255, 255, 255, 0.96); max-width: 550px; width: 90%; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative;
+        }
+        .lang-switch { position: absolute; top: 20px; right: 20px; display: flex; gap: 5px; }
+        .lang-btn { background: #eee; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; }
+        .lang-btn.active { background: var(--accent); color: white; }
+        
+        h1 { text-align: center; font-size: 1.4rem; margin-bottom: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .question-box { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .options { display: flex; justify-content: space-around; margin-top: 15px; }
+        label { font-size: 0.85rem; cursor: pointer; text-align: center; }
+        input[type="radio"] { display: block; margin: 5px auto; accent-color: var(--accent); scale: 1.2; }
+        
+        button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        
+        #result { display: none; text-align: center; animation: fadeIn 0.5s; }
+        .gauge-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        #fill { width: 0%; height: 100%; background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336); transition: 1.5s ease-out; }
+        .card { text-align: left; background: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid var(--accent); margin: 15px 0; font-size: 0.9rem; }
+        
+        .sns-btn { background: #000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-top: 10px; }
+        
+        /* 免責事項デザイン */
+        .footer-links { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #888; border-top: 1px solid #eee; padding-top: 10px; }
+        .footer-links span { cursor: pointer; text-decoration: underline; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; max-width: 400px; font-size: 0.8rem; line-height: 1.6; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLang('jp')">JP</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <h1 id="title">脳の実労働量診断</h1>
+    
+    <div id="quiz">
+        <div class="question-box">
+            <p id="q-text"></p>
+            <div class="options" id="opt-container"></div>
+        </div>
+        <button id="main-btn" onclick="next()">次へ進む</button>
+    </div>
+
+    <div id="result">
+        <h2 id="res-type"></h2>
+        <div id="res-score"></div>
+        <div class="gauge-bar"><div id="fill"></div></div>
+        <div class="card">
+            <strong id="label-rx">💊 処方箋 / Prescription</strong><br>
+            <span id="res-rx"></span>
+        </div>
+        <a id="tweet" href="#" target="_blank" class="sns-btn">Share on 𝕏</a>
+        <p style="font-size:0.7rem; color:#999; cursor:pointer; margin-top:15px;" onclick="location.reload()">Reset</p>
+    </div>
+
+    <div class="footer-links">
+        <span onclick="toggleModal(true)" id="disclaimer-link">免責事項 / Disclaimer</span>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title">免責事項</h3>
+        <p id="modal-body"></p>
+        <button onclick="toggleModal(false)" style="margin-top:15px; padding:10px; width:100%; border-radius:20px; border:none; background:#666; color:white; cursor:pointer;">Close</button>
+    </div>
+</div>
+
+<script>
+    const i18n = {
+        jp: {
+            title: "脳の実労働量診断",
+            opts: ["低い", "普通", "高い"],
+            btn: "次へ進む",
+            qs: ["チャット通知に即レスしますか？", "ブラウザのタブが常に10個以上？", "移動中もスマホで仕事を見ますか？", "PCの読込数秒にイライラしますか？", "寝る直前までタスクを考えますか？"],
+            types: ["昭和のマラソン型", "標準的ランナー", "令和のインターバル走"],
+            rxs: ["脳の余白が保たれています。今のペースを大切に。", "少し過密です。1日15分の『非デジタル時間』を。", "限界です！今すぐスマホを置いて深呼吸を。"],
+            disclaimerTitle: "免責事項",
+            disclaimerBody: "本診断は一般的な傾向を分析するものであり、医学的診断に代わるものではありません。心身の不調がある場合は専門医を受診してください。結果の利用は自己責任でお願いいたします。"
+        },
+        en: {
+            title: "Brain Workload Check",
+            opts: ["Low", "Mid", "High"],
+            btn: "Next Step",
+            qs: ["Do you check notifications immediately?", "More than 10 browser tabs open?", "Check work on mobile while commuting?", "Feel annoyed by short loading times?", "Think about tasks until bedtime?"],
+            types: ["Showa Marathon Style", "Average Runner", "Reiwa Interval Sprint"],
+            rxs: ["Healthy. Keep your 'Default Mode' time.", "Slightly overloaded. Take 15 mins offline.", "Overheated! Disconnect and rest now."],
+            disclaimerTitle: "Disclaimer",
+            disclaimerBody: "This tool is for entertainment and general analysis only, not a medical diagnosis. Please consult a professional for health issues. Use at your own risk."
+        }
+    };
+
+    let lang = 'jp', current = 0, score = 0;
+
+    function setLang(l) {
+        lang = l;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+        updateUI();
+    }
+
+    function updateUI() {
+        document.getElementById('title').innerText = i18n[lang].title;
+        document.getElementById('q-text').innerText = `Q${current+1}: ${i18n[lang].qs[current]}`;
+        document.getElementById('main-btn').innerText = i18n[lang].btn;
+        document.getElementById('modal-title').innerText = i18n[lang].disclaimerTitle;
+        document.getElementById('modal-body').innerText = i18n[lang].disclaimerBody;
+        const opts = i18n[lang].opts;
+        document.getElementById('opt-container').innerHTML = opts.map((o, i) => `<label><input type="radio" name="v" value="${i}"> ${o}</label>`).join('');
+    }
+
+    function next() {
+        const sel = document.querySelector('input[name="v"]:checked');
+        if(!sel) return alert("Select an option!");
+        score += parseInt(sel.value) + 1; // 1, 2, 3 points
+        current++;
+        if(current < 5) updateUI(); else show();
+    }
+
+    function show() {
+        document.getElementById('quiz').style.display = 'none';
+        const res = document.getElementById('result');
+        res.style.display = 'block';
+        const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
+        document.getElementById('res-type').innerText = i18n[lang].types[idx];
+        document.getElementById('res-score').innerText = `Score: ${score} / 15`;
+        document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
+        setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
+        const txt = encodeURIComponent(`【Brain Workload Check】Result: ${i18n[lang].types[idx]}\n#BrainRest\n`);
+        document.getElementById('tweet').href = `https://twitter.com{txt}`;
+    }
+
+    function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
+    updateUI();
+</script>
+</body>
+</html>
