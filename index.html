@@ -127,40 +127,26 @@ function show() {
     document.getElementById('quiz').style.display = 'none';
     const res = document.getElementById('result');
     res.style.display = 'block';
+
+    // スコア判定 (合計15点満点)
     const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
     document.getElementById('res-type').innerText = i18n[lang].types[idx];
     document.getElementById('res-score').innerText = `Score: ${score} / 15`;
     document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
-    setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
 
-    // SNSシェア機能の修正
-    const shareText = encodeURIComponent(`【脳の労働密度診断】\n私の結果は「${i18n[lang].types[idx]}」でした！\n診断はこちら：${window.location.href}\n#労働密度診断 #BrainRest`);
-    document.getElementById('tweet').href = `https://twitter.com{shareText}`;
-}
-
-function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
-updateUI();
-function show() {
-    document.getElementById('quiz').style.display = 'none';
-    const res = document.getElementById('result');
-    res.style.display = 'block';
-    
-    // スコア判定
-    const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
-    document.getElementById('res-type').innerText = i18n[lang].types[idx];
-    document.getElementById('res-score').innerText = `Score: ${score} / 15`;
-    document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
-    
     // ゲージのアニメーション
     setTimeout(() => {
         document.getElementById('fill').style.width = (score / 15 * 100) + "%";
     }, 100);
 
-    // 【重要】SNSシェアボタンのURL生成（修正版）
-    const tweetUrl = "https://twitter.com";
-    const message = `【脳の労働密度診断】\n結果は「${i18n[lang].types[idx]}」でした！\n(Score: ${score}/15)\n#労働密度診断 #昭和のマラソン令和のインターバル走\n${window.location.href}`;
-    
-    document.getElementById('tweet').href = `${tweetUrl}?text=${encodeURIComponent(message)}`;
+    // 【重要】SNSメッセージを「動的」に生成して上書き
+    const shareUrl = window.location.href; // 今見ているサイトのURL
+    const resultType = i18n[lang].types[idx];
+    const message = `【脳の労働密度診断】\n私の結果は「${resultType}」でした！\n(Score: ${score}/15)\n\n診断はこちら：\n${shareUrl}\n#労働密度診断 #昭和のマラソン令和のインターバル走`;
+
+    // 𝕏 (Twitter) の投稿用URLを組み立てる
+    const tweetBtn = document.getElementById('tweet');
+    tweetBtn.href = "https://twitter.com" + encodeURIComponent(message);
 }
 
 </script>
