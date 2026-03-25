@@ -80,6 +80,7 @@ const i18n = {
         rxs: ["あなたの脳には、心地よい「余白」が保たれています。今の健やかなリズムを大切にしてください。", "少しばかり過密なようです。1日15分だけ、全ての画面を閉じる「静寂」を予約しませんか？", "脳が悲鳴を上げています。それはあなたの根性のせいではありません。今すぐ深呼吸をして、自分を労わってください。"],
         disclaimerTitle: "免責事項",
         disclaimerBody: "本診断は一般的な傾向を分析するものであり、医学的診断に代わるものではありません。結果の利用は自己責任でお願いいたします。心身に不調を感じる場合は、速やかに専門医や医療機関を受診してください。"
+        shareText: "【脳の労働密度診断】\n結果は「{type}」でした！\n(Score: {score}/15)\n\n診断はこちら：\n#労働密度診断 #脳のインターバル走"
     },
      en: {
         title: "Brain Workload Check",
@@ -101,6 +102,7 @@ const i18n = {
         // 以下の2行を追加しました
         disclaimerTitle: "Disclaimer",
         disclaimerBody: "This tool is for general cognitive workload analysis and entertainment purposes only, not a medical diagnosis. Use at your own risk. If you experience any physical or mental health issues, please consult a medical professional or a healthcare institution immediately."
+        shareText: "[Brain Workload Check]\nMy result was '{type}'!\n(Score: {score}/15)\n\nCheck your workload here:\n#WorkloadDiagnostic #BurnoutCheck"
     }
 };
 
@@ -135,11 +137,18 @@ function show() {
     setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
 
     // メッセージの組み立て（ここでエンコードを1回に集約）
-    const shareUrl = window.location.href;
     const resultType = i18n[lang].types[idx];
-    const message = `【脳の労働密度診断】\n結果は「${resultType}」でした！\n(Score: ${score}/15)\n\n診断はこちら：\n${shareUrl}\n#労働密度診断 #脳のインターバル走`;
+    const shareUrl = window.location.href;
 
-    // 𝕏 (Twitter) 投稿用URL
+    // 言語設定に合わせたテンプレートを取得し、値を埋め込む
+    let message = i18n[lang].shareText
+        .replace("{type}", resultType)
+        .replace("{score}", score);
+    
+    // URLを最後に結合
+    message += "\n" + shareUrl;
+
+    // SNSボタンへ反映
     document.getElementById('tweet').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
 }
 
