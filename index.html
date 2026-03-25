@@ -146,7 +146,8 @@ function show() {
 
     // 𝕏 (Twitter) の投稿用URLを組み立てる
     const tweetBtn = document.getElementById('tweet');
-    tweetBtn.href = "https://twitter.com" + encodeURIComponent(message);
+    // ✅ 修正後
+tweetBtn.href = "https://twitter.com" + encodeURIComponent(message);
 }
     // ページ読み込み時に最初の設問を表示する
     updateUI();
