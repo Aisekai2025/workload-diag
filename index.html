@@ -19,7 +19,7 @@ body {
 h1 { text-align: center; font-size: 1.4rem; margin-bottom: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
 .question-box { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
 .options { display: flex; justify-content: space-around; margin-top: 15px; }
-label { font-size: 0.8rem; cursor: pointer; text-align: center; flex: 1; padding: 5px; }
+label { font-size: 0.85rem; cursor: pointer; text-align: center; flex: 1; padding: 5px; }
 input[type="radio"] { display: block; margin: 8px auto; accent-color: var(--accent); scale: 1.3; }
 button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
 #result { display: none; text-align: center; animation: fadeIn 0.5s; }
@@ -46,42 +46,48 @@ button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: 
             <p id="q-text" style="font-weight:bold; min-height:3em;"></p>
             <div class="options" id="opt-container"></div>
         </div>
-        <button id="main-btn" onclick="next()">次へ進む / Next</button>
+        <button id="main-btn" onclick="next()">回答して次へ進む</button>
     </div>
     <div id="result">
         <h2 id="res-type"></h2>
         <div id="res-score"></div>
         <div class="gauge-bar"><div id="fill"></div></div>
         <div class="card">
-            <strong id="label-rx">💊 処方箋 / Prescription</strong><br>
+            <strong id="label-rx">💊 明日への処方箋</strong><br>
             <span id="res-rx"></span>
         </div>
-        <a id="tweet" href="#" target="_blank" class="sns-btn">Share on 𝕏</a>
-        <p style="font-size:0.7rem; color:#999; cursor:pointer; margin-top:15px;" onclick="location.reload()">Reset</p>
+        <a id="tweet" href="#" target="_blank" class="sns-btn">結果を 𝕏 で共有する</a>
+        <p style="font-size:0.7rem; color:#999; cursor:pointer; margin-top:15px;" onclick="location.reload()">もう一度診断する</p>
     </div>
     <div class="footer-links"><span onclick="toggleModal(true)">免責事項 / Disclaimer</span></div>
 </div>
-<div id="modal" class="modal"><div class="modal-content"><h3 id="modal-title"></h3><p id="modal-body"></p><button onclick="toggleModal(false)" style="margin-top:15px; padding:10px; width:100%; border-radius:20px; border:none; background:#666; color:white; cursor:pointer;">Close</button></div></div>
+<div id="modal" class="modal"><div class="modal-content"><h3 id="modal-title"></h3><p id="modal-body"></p><button onclick="toggleModal(false)" style="margin-top:15px; padding:10px; width:100%; border-radius:20px; border:none; background:#666; color:white; cursor:pointer;">閉じる</button></div></div>
 
 <script>
 const i18n = {
     jp: {
         title: "脳の実労働量診断",
-        opts: ["ゆとり", "ふつう", "限界…"], // エモーショナルな選択肢
-        btn: "次のステージへ",
-        qs: ["チャットの通知、3分以内に返さないとソワソワする？", "気づくとブラウザのタブが『迷路』のように増えている？", "歩きながらスマホでメールを確認するのが『普通』になった？", "動画の読み込みが3秒止まると、スマホを投げたくなる？", "ベッドに入っても、明日のタスクが脳内で『会議』を始める？"],
-        types: ["🌿 昭和のマラソン型", "🏃 標準的ランナー", "🔥 令和のインターバル走"],
-        rxs: ["脳の余白が保たれています。今のペース、大切にしてね。", "少し過密。1日15分だけ、スマホを別の部屋に置きませんか？", "脳が悲鳴を上げています。今すぐ深呼吸して、自分を労わって！"],
+        opts: ["いいえ、それほど", "多少はその傾向が", "まさにその通り"],
+        btn: "回答して次へ進む",
+        qs: [
+            "チャットの通知には、常に即レスしなければと焦りますか？",
+            "気づくとブラウザのタブを、整理できないほど開いていますか？",
+            "移動中や歩行中も、無意識に仕事のメールを確認してしまいますか？",
+            "画面の読み込みが数秒止まると、強い苛立ちを感じますか？",
+            "ベッドに入っても、明日のタスクが脳内で「会議」を始めますか？"
+        ],
+        types: ["🌿 昭和のマラソン型（低負荷）", "🏃 標準的ランナー（中負荷）", "🔥 令和のインターバル走（高負荷）"],
+        rxs: ["あなたの脳には、心地よい「余白」が保たれています。今の健やかなリズムを大切にしてください。", "少しばかり過密なようです。1日15分だけ、全ての画面を閉じる「静寂」を予約しませんか？", "脳が悲鳴を上げています。それはあなたの根性のせいではありません。今すぐ深呼吸をして、自分を労わってください。"],
         disclaimerTitle: "免責事項",
-        disclaimerBody: "本診断は医学的診断ではありません。結果は自己責任でお願いいたします。"
+        disclaimerBody: "本診断は医学的診断ではありません。結果の利用は自己責任でお願いいたします。"
     },
     en: {
         title: "Brain Workload Check",
-        opts: ["Chill", "Usual", "Burnt Out"],
-        btn: "Continue",
-        qs: ["Do you feel anxious if not replying within 3 mins?", "Do your browser tabs look like a maze?", "Is checking mail while walking 'normal' for you?", "Do you feel annoyed by 3s loading delays?", "Do tomorrow's tasks start a 'meeting' in your bed?"],
+        opts: ["Not really", "Somewhat", "Exactly"],
+        btn: "Next Step",
+        qs: ["Do you feel anxious if not replying to chats immediately?", "Do you keep so many browser tabs open that you can't manage them?", "Do you habitually check work emails while commuting or walking?", "Do you feel strongly irritated by short loading delays?", "Do tomorrow's tasks start a 'meeting' in your head after bedtime?"],
         types: ["🌿 Showa Marathon", "🏃 Standard Runner", "🔥 Reiwa Interval Sprint"],
-        rxs: ["Good balance. Keep your 'Default Mode' alive.", "Slightly overloaded. Try 15 mins of offline bliss.", "Your brain is screaming. Disconnect and rest now!"]
+        rxs: ["Your brain maintains a healthy 'buffer'. Cherish your current pace.", "Your cognitive load is increasing. Try 15 mins of complete offline silence.", "Your brain is exhausted. It's not about your willpower. Disconnect and rest now!"]
     }
 };
 
@@ -109,10 +115,10 @@ function show() {
     res.style.display = 'block';
     const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
     document.getElementById('res-type').innerText = i18n[lang].types[idx];
-    document.getElementById('res-score').innerText = `Fatigue Level: ${score} / 15`;
+    document.getElementById('res-score').innerText = `Fatigue Score: ${score} / 15`;
     document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
     setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
-    const message = encodeURIComponent(`【脳の労働密度診断】\n私の結果は「${i18n[lang].types[idx]}」でした！\n(Fatigue: ${score}/15)\n\n診断はこちら：\n${window.location.href}\n#労働密度診断 #BrainRest`);
+    const message = encodeURIComponent(`【脳の労働密度診断】\n私の結果は「${i18n[lang].types[idx]}」でした！\n(Fatigue Score: ${score}/15)\n\n診断はこちら：\n${window.location.href}\n#労働密度診断 #脳のインターバル走`);
     document.getElementById('tweet').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
 }
 function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
