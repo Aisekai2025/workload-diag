@@ -148,7 +148,9 @@ function show() {
     const tweetBtn = document.getElementById('tweet');
     tweetBtn.href = "https://twitter.com" + encodeURIComponent(message);
 }
-
+    // ページ読み込み時に最初の設問を表示する
+    updateUI();
 </script>
+
 </body>
 </html>
