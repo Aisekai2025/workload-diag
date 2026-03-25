@@ -141,7 +141,7 @@ const message = `【脳の労働密度診断】\n結果は「${resultType}」で
 
 // 𝕏 (Twitter) 投稿用URLの修正
 const tweetBtn = document.getElementById('tweet');
-tweetBtn.href = "https://twitter.com" + encodeURIComponent(message);
+tweetBtn.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
 }
 
 function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
