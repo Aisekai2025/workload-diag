@@ -119,7 +119,7 @@ function show() {
     document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
     setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
     const message = encodeURIComponent(`【脳の労働密度診断】\n私の結果は「${i18n[lang].types[idx]}」でした！\n(Fatigue Score: ${score}/15)\n\n診断はこちら：\n${window.location.href}\n#労働密度診断 #脳のインターバル走`);
-    document.getElementById('tweet').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
+    document.getElementById('tweet').href = "https://twitter.com" + message;
 }
 function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
 updateUI();
