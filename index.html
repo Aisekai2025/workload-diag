@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brain Workload Diagnostics | 労働密度診断</title>
-<link rel="icon" href="data:,">
-<style>
-:root { --retro: #f4ecd8; --modern: #e0f2f1; --accent: #26a69a; --text: #2c3e50; }
-body { 
-    font-family: 'Helvetica Neue', Arial, sans-serif; 
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BrainWorkloadCheck.png') center/cover no-repeat fixed;
-    background-color: #333; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
-}
-.container { background: rgba(255, 255, 255, 0.96); max-width: 550px; width: 90%; padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; }
-.lang-switch { position: absolute; top: 20px; right: 20px; display: flex; gap: 5px; }
-.lang-btn { background: #eee; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; }
-.lang-btn.active { background: var(--accent); color: white; }
-h1 { text-align: center; font-size: 1.4rem; margin-bottom: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
-.question-box { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
-.options { display: flex; justify-content: space-around; margin-top: 15px; }
-label { font-size: 0.85rem; cursor: pointer; text-align: center; flex: 1; padding: 5px; }
-input[type="radio"] { display: block; margin: 8px auto; accent-color: var(--accent); scale: 1.3; }
-button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-#result { display: none; text-align: center; animation: fadeIn 0.5s; }
-.gauge-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin: 15px 0; overflow: hidden; }
-#fill { width: 0%; height: 100%; background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336); transition: 1.5s ease-out; }
-.card { text-align: left; background: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid var(--accent); margin: 15px 0; font-size: 0.9rem; }
-.sns-btn { background: #000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-top: 10px; }
-.footer-links { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #888; border-top: 1px solid #eee; padding-top: 10px; }
-.footer-links span { cursor: pointer; text-decoration: underline; }
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
-.modal-content { background: white; padding: 25px; border-radius: 15px; max-width: 400px; font-size: 0.8rem; line-height: 1.6; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Workload Diagnostics | 労働密度診断</title>
+    <link rel="icon" href="data:,">
+    <style>
+        :root { --retro: #f4ecd8; --modern: #e0f2f1; --accent: #26a69a; --text: #2c3e50; }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('BrainWorkloadCheck.png') center/cover no-repeat fixed;
+            background-color: #333; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;
+        }
+        .container { background: rgba(255, 255, 255, 0.96); max-width: 550px; width: 90%; padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; }
+        .lang-switch { position: absolute; top: 20px; right: 20px; display: flex; gap: 5px; }
+        .lang-btn { background: #eee; border: none; padding: 5px 10px; border-radius: 15px; cursor: pointer; font-size: 0.7rem; }
+        .lang-btn.active { background: var(--accent); color: white; }
+        h1 { text-align: center; font-size: 1.4rem; margin-bottom: 25px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .question-box { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .options { display: flex; justify-content: space-around; margin-top: 15px; }
+        label { font-size: 0.85rem; cursor: pointer; text-align: center; flex: 1; padding: 5px; }
+        input[type="radio"] { display: block; margin: 8px auto; accent-color: var(--accent); scale: 1.3; }
+        button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: white; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        #result { display: none; text-align: center; animation: fadeIn 0.5s; }
+        .gauge-bar { width: 100%; height: 12px; background: #eee; border-radius: 6px; margin: 15px 0; overflow: hidden; }
+        #fill { width: 0%; height: 100%; background: linear-gradient(90deg, #4caf50, #ffeb3b, #f44336); transition: 1.5s ease-out; }
+        .card { text-align: left; background: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid var(--accent); margin: 15px 0; font-size: 0.9rem; }
+        .sns-btn { background: #000; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-size: 0.8rem; display: inline-block; margin-top: 10px; }
+        .footer-links { text-align: center; margin-top: 30px; font-size: 0.7rem; color: #888; border-top: 1px solid #eee; padding-top: 10px; }
+        .footer-links span { cursor: pointer; text-decoration: underline; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 15px; max-width: 400px; font-size: 0.8rem; line-height: 1.6; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -61,7 +61,13 @@ button#main-btn { width: 100%; padding: 16px; background: var(--accent); color: 
     </div>
     <div class="footer-links"><span onclick="toggleModal(true)">免責事項 / Disclaimer</span></div>
 </div>
-<div id="modal" class="modal"><div class="modal-content"><h3 id="modal-title"></h3><p id="modal-body"></p><button onclick="toggleModal(false)" style="margin-top:15px; padding:10px; width:100%; border-radius:20px; border:none; background:#666; color:white; cursor:pointer;">閉じる</button></div></div>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-title"></h3>
+        <p id="modal-body"></p>
+        <button onclick="toggleModal(false)" style="margin-top:15px; padding:10px; width:100%; border-radius:20px; border:none; background:#666; color:white; cursor:pointer;">閉じる</button>
+    </div>
+</div>
 
 <script>
 const i18n = {
@@ -77,37 +83,46 @@ const i18n = {
             "ベッドに入っても、明日のタスクが脳内で「会議」を始めますか？"
         ],
         types: ["🌿 昭和のマラソン型（低負荷）", "🏃 標準的ランナー（中負荷）", "🔥 令和のインターバル走（高負荷）"],
-        rxs: ["あなたの脳には、心地よい「余白」が保たれています。今の健やかなリズムを大切にしてください。", "少しばかり過密なようです。1日15分だけ、全ての画面を閉じる「静寂」を予約しませんか？", "脳が悲鳴を上げています。それはあなたの根性のせいではありません。今すぐ深呼吸をして、自分を労わってください。"],
+        rxs: [
+            "あなたの脳には、心地よい「余白」が保たれています。今の健やかなリズムを大切にしてください。",
+            "少しばかり過密なようです。1日15分だけ、全ての画面を閉じる「静寂」を予約しませんか？",
+            "脳が悲鳴を上げています。それはあなたの根性のせいではありません。今すぐ深呼吸をして、自分を労わってください。"
+        ],
         disclaimerTitle: "免責事項",
-        disclaimerBody: "本診断は一般的な傾向を分析するものであり、医学的診断に代わるものではありません。結果の利用は自己責任でお願いいたします。心身に不調を感じる場合は、速やかに専門医や医療機関を受診してください。"
+        disclaimerBody: "本診断は一般的な傾向を分析するものであり、医学的診断に代わるものではありません。結果の利用は自己責任でお願いいたします。心身に不調を感じる場合は、速やかに専門医や医療機関を受診してください。",
         shareText: "【脳の労働密度診断】\n結果は「{type}」でした！\n(Score: {score}/15)\n\n診断はこちら：\n#労働密度診断 #脳のインターバル走"
     },
-     en: {
+    en: {
         title: "Brain Workload Check",
         opts: ["Not really", "Somewhat", "Exactly"],
         btn: "Next Step",
         qs: [
-            "Do you feel anxious if not replying to chats immediately?", 
-            "Do you keep so many browser tabs open that you can't manage them?", 
-            "Do you habitually check work emails while commuting or walking?", 
-            "Do you feel strongly irritated by short loading delays?", 
+            "Do you feel anxious if not replying to chats immediately?",
+            "Do you keep so many browser tabs open that you can't manage them?",
+            "Do you habitually check work emails while commuting or walking?",
+            "Do you feel strongly irritated by short loading delays?",
             "Do tomorrow's tasks start a 'meeting' in your head after bedtime?"
         ],
         types: ["🌿 Showa Marathon", "🏃 Standard Runner", "🔥 Reiwa Interval Sprint"],
         rxs: [
-            "Your brain maintains a healthy 'buffer'. Cherish your current pace.", 
-            "Your cognitive load is increasing. Try 15 mins of complete offline silence.", 
+            "Your brain maintains a healthy 'buffer'. Cherish your current pace.",
+            "Your cognitive load is increasing. Try 15 mins of complete offline silence.",
             "Your brain is exhausted. It's not about your willpower. Disconnect and rest now!"
         ],
-        // 以下の2行を追加しました
         disclaimerTitle: "Disclaimer",
-        disclaimerBody: "This tool is for general cognitive workload analysis and entertainment purposes only, not a medical diagnosis. Use at your own risk. If you experience any physical or mental health issues, please consult a medical professional or a healthcare institution immediately."
+        disclaimerBody: "This tool is for general cognitive workload analysis and entertainment purposes only, not a medical diagnosis. Use at your own risk. If you experience any physical or mental health issues, please consult a medical professional or a healthcare institution immediately.",
         shareText: "[Brain Workload Check]\nMy result was '{type}'!\n(Score: {score}/15)\n\nCheck your workload here:\n#WorkloadDiagnostic #BurnoutCheck"
     }
 };
 
 let lang = 'jp', current = 0, score = 0;
-function setLang(l) { lang = l; updateUI(); }
+
+function setLang(l) { 
+    lang = l; 
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.innerText.toLowerCase() === l));
+    updateUI(); 
+}
+
 function updateUI() {
     document.getElementById('title').innerText = i18n[lang].title;
     document.getElementById('q-text').innerText = `Q${current+1}: ${i18n[lang].qs[current]}`;
@@ -115,47 +130,44 @@ function updateUI() {
     document.getElementById('modal-title').innerText = i18n[lang].disclaimerTitle || "Disclaimer";
     document.getElementById('modal-body').innerText = i18n[lang].disclaimerBody || "Use at your own risk.";
     const opts = i18n[lang].opts;
-    document.getElementById('opt-container').innerHTML = opts.map((o, i) => `<label><input type="radio" name="v" value="${i}"> ${o}</label>`).join('');
+    document.getElementById('opt-container').innerHTML = opts.map((o, i) =>
+        `<label><input type="radio" name="v" value="${i}"> ${o}</label>`).join('');
 }
+
 function next() {
     const sel = document.querySelector('input[name="v"]:checked');
-    if(!sel) return;
+    if(!sel) return alert("回答を選択してください！");
     score += parseInt(sel.value) + 1;
     current++;
     if(current < 5) updateUI(); else show();
 }
+
 function show() {
     document.getElementById('quiz').style.display = 'none';
     const res = document.getElementById('result');
     res.style.display = 'block';
-    
     const idx = score <= 7 ? 0 : (score <= 11 ? 1 : 2);
     document.getElementById('res-type').innerText = i18n[lang].types[idx];
     document.getElementById('res-score').innerText = `Fatigue Score: ${score} / 15`;
     document.getElementById('res-rx').innerText = i18n[lang].rxs[idx];
-    
     setTimeout(() => document.getElementById('fill').style.width = (score/15*100) + "%", 100);
 
-    // メッセージの組み立て（ここでエンコードを1回に集約）
     const resultType = i18n[lang].types[idx];
     const shareUrl = window.location.href;
-
-    // 言語設定に合わせたテンプレートを取得し、値を埋め込む
     let message = i18n[lang].shareText
         .replace("{type}", resultType)
         .replace("{score}", score);
-    
-    // URLを最後に結合
     message += "\n" + shareUrl;
 
-    // SNSボタンへ反映
     document.getElementById('tweet').href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(message);
 }
 
-function toggleModal(s) { document.getElementById('modal').style.display = s ? 'flex' : 'none'; }
+function toggleModal(s) { 
+    document.getElementById('modal').style.display = s ? 'flex' : 'none'; 
+}
+
+// 最初の設問を表示
 updateUI();
 </script>
 </body>
 </html>
-
-
